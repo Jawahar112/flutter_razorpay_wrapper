@@ -3,9 +3,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:js/js.dart';
 import 'package:flutter_razorpay_wrapper/js_razorpay.dart';
 
 class RazorpayFlutterPlugin {
@@ -111,7 +111,7 @@ class RazorpayFlutterPlugin {
     /// true (default): Enables customers to retry payments.
     bool isRetryEnabled = _retryStatus(options);
 
-    options['handler'] = allowInterop((dynamic res) {
+    options['handler'] = ((dynamic res) {
       final response = _mapify(res);
 
       reply['type'] = _CODE_PAYMENT_SUCCESS;
@@ -124,7 +124,7 @@ class RazorpayFlutterPlugin {
       completer.complete(reply);
     });
 
-    options['modal.ondismiss'] = allowInterop((response) {
+    options['modal.ondismiss'] = ((response) {
       if (!completer.isCompleted) {
         reply['type'] = _CODE_PAYMENT_ERROR;
         data['code'] = PAYMENT_CANCELLED;

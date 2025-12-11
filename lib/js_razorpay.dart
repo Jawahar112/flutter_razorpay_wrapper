@@ -1,34 +1,29 @@
-import 'package:js/js.dart';
-import 'package:js/js_util.dart';
+import 'dart:js_interop';
 
-/// JsRazorpay
+
 class JsRazorpay {
-  /// Js Razorpay Class
   final Razorpay razorpay;
 
   JsRazorpay({
     required Map<dynamic, dynamic> options,
     required Function(dynamic) onFailed,
   }) : razorpay = Razorpay(
-          jsify(options),
+          options.jsify(),                 // <-- FIX
         )..on(
             'payment.failed',
-            allowInterop(onFailed),
+            onFailed.toJS,                 // <-- FIX (replace allowInterop)
           );
 
-  /// open checkoout
   void open() => razorpay.open();
-
-  /// close checkout
   void close() => razorpay.close();
 }
 
 @JS()
 class Razorpay {
-  external Razorpay(dynamic options);
+  external Razorpay(JSAny? options);
   external open();
-  external on(String type, Function(dynamic) onResponse);
-  external close();
+  external on(String type, JSFunction onResponse);
+    external close();
 }
 
 @JS('JSON.stringify')
